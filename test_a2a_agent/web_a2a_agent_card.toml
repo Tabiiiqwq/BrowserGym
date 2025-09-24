@@ -1,0 +1,25 @@
+name                = "Test Web A2A Agent"
+description         = """
+This agent connects to MCP and uses the BrowserGym environment to interact with webpages. 
+It can follow instructions to navigate websites, click buttons, fill forms, collect information, 
+and generally perform web-based tasks.
+"""
+url                 = "http://localhost:9011/"
+version             = "1.0.0"
+
+defaultInputModes   = ["text"]
+defaultOutputModes  = ["text"]
+
+[capabilities]
+streaming = true
+
+[[skills]]
+id          = "web_interaction"
+name        = "Web Interaction"
+description = "Execute web tasks such as navigation, form filling, clicking, and information extraction through BrowserGym."
+tags        = ["web", "interaction", "browsergym", "mcp"]
+examples    = [
+  "Open a webpage and click the login button.",
+  "Fill in a search box with a query and submit.",
+  "Collect all hyperlinks on the current page."
+]

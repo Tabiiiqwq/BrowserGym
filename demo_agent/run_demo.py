@@ -5,6 +5,8 @@ from agent import DemoAgentArgs
 
 # browsergym experiments utils
 from browsergym.experiments import EnvArgs, ExpArgs, get_exp_result
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def str2bool(v):

@@ -6,6 +6,8 @@ import fire
 
 from benchmark_extractor.unified_benchmark_integration import UnifiedBenchmarkInterface
 from agents.agent_system_wrapper import AgentSystemWrapper
+from agents.browsergym_agent_wrapper import BrowserGymAgentWrapper
+from demo_agent.agent import DemoAgentArgs
 
 logger = logging.getLogger(__name__)
 from dotenv import load_dotenv
@@ -366,6 +368,20 @@ def main(action: str,
         evaluator = HumanEval()
         if task_id:
             evaluator.run_single_task(benchmark, task_id)
+    elif action == "agent_eval":
+        evaluator = AgentEval()
+        
+        agent_args = DemoAgentArgs(agent_name="test_agent",
+                                   model_name="gpt-4o",
+                                   use_html=True,
+                                   use_axtree=True,
+                                   use_screenshot=False)
+
+        agent_wrapper = BrowserGymAgentWrapper(agent_args=agent_args)
+        if task_id:
+            evaluator.run_single_task(agent_wrapper, benchmark, task_id)
+        
+        
     
 
 

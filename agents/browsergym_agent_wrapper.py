@@ -34,10 +34,10 @@ class BrowserGymAgentWrapper(AgentSystemWrapper):
     def setup(self) -> None:
         pass
     
-    def run_task(self, task_data: Dict[str, Any]) -> str:
+    def run_task(self, task_data: Dict[str, Any], task_cfg: Dict[str, Any]) -> str:
         try:
             self.agent = self.agent_args.make_agent()         
-            self.env = self._create_env_for_task(task_data)
+            self.env = self._create_env_for_task(task_data, task_cfg)
             answer = self._run_agent_episode()
             return answer
             
@@ -45,23 +45,29 @@ class BrowserGymAgentWrapper(AgentSystemWrapper):
             logger.error(f"Error running task: {e}")
             raise
     
-    def _create_env_for_task(self, task_data: Dict[str, Any]) -> BrowserEnv:
+    def _create_env_for_task(self, task_data: Dict[str, Any], task_cfg) -> BrowserEnv:
 
-        
-        # TODO: Try openended setting for all tasks
-        if task_data['benchmark'] == 'webarena':
+        if task_cfg['real_a2a']:
+            task_name = "browsergym/openended"
+            task_kwargs = {
+                "start_url": 'https://bing.com',
+                "goal": task_data['goal']
+            }            
+        elif task_data['benchmark'] == 'webarena' and not task_cfg['real_a2a']:
             task_name = f"browsergym/webarena.{task_data['task_id']}"
             task_kwargs = {}
             import browsergym.webarena
             import browsergym.webarenalite
             
-        else:  # assistantbench
+        elif task_data['benchmark'] == 'assistantbench' and not task_cfg['real_a2a']:
             task_name = f"browsergym/assistantbench.{task_data['task_id']}"
             task_kwargs = {
                 # "start_url": task_data['start_url'],
                 # "goal": task_data['description']
             }
             import browsergym.assistantbench
+        else: 
+            raise ValueError(f"Unsupported benchmark: {task_data['benchmark']}")
         
         env = gym.make(
             task_name,
@@ -69,6 +75,7 @@ class BrowserGymAgentWrapper(AgentSystemWrapper):
             max_episode_steps=self.max_steps,
             viewport=self.viewport,
             action_mapping=self.agent.action_set.to_python_code,
+            wait_for_user_message=False,
             task_kwargs=task_kwargs
         )
         

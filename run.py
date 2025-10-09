@@ -6,6 +6,7 @@ import fire
 
 from benchmark_extractor.unified_benchmark_integration import UnifiedBenchmarkInterface
 from agents.agent_system_wrapper import AgentSystemWrapper
+from agents.openai_computer_use_wrapper import OpenAIComputerUseAgentWrapper
 from agents.browsergym_agent_wrapper import BrowserGymAgentWrapper
 from demo_agent.agent import DemoAgentArgs
 
@@ -165,6 +166,8 @@ class AgentEval:
     
     def __init__(self):
         self.interface = UnifiedBenchmarkInterface()
+
+        
     
     def run_single_task(self, 
                            agent_wrapper: AgentSystemWrapper,
@@ -206,7 +209,7 @@ class AgentEval:
                 print("🤖 Running agent...")
             
             # Run agent on task
-            answer = agent_wrapper.run_task(task_data)
+            answer = agent_wrapper.run_task(task_data, task_cfg={"real_a2a": True})
             
             if not answer:
                 error_msg = "❌ Agent returned empty answer"
@@ -378,6 +381,7 @@ def main(action: str,
                                    use_screenshot=False)
 
         agent_wrapper = BrowserGymAgentWrapper(agent_args=agent_args)
+        # agent_wrapper = OpenAIComputerUseAgentWrapper()
         if task_id:
             evaluator.run_single_task(agent_wrapper, benchmark, task_id)
         

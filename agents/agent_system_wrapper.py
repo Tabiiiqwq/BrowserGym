@@ -14,7 +14,7 @@ class AgentSystemWrapper(Protocol):
         """Setup browser and context for the agent"""
         ...
     
-    def run_task(self, task_data: Dict[str, Any]) -> str:
+    def run_task(self, task_data: Dict[str, Any], task_cfg: Dict[str, Any]) -> str:
         """
         Run the agent on a task and return the answer
         

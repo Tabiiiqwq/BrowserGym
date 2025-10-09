@@ -28,6 +28,7 @@ def extract_tasks(benchmark, output_file, max_tasks):
                         "start_urls": task_data["start_urls"],
                         "primary_url": task_data["primary_url"],
                         "credentials": task_data["credentials"],
+                        "sites": task_data["sites"],
                         "benchmark": "webarena"
                     }
                     tasks.append(clean_task)
